@@ -52,6 +52,7 @@ export const signin=async(req,res,next)=>{
         if(!validPassword){
            return next(errorHandler(400,'Invalid password'));
         }
+        
 
         const token=jwt.sign(
             { id:validUser._id }, process.env.JWT_SECRET);
@@ -61,11 +62,7 @@ export const signin=async(req,res,next)=>{
 
         res.status(200).cookie('access_token',token,{
             httpOnly:true
-        }).json(rest);    
-
-
-
-
+        }).json(rest); 
 
     } catch (error) {
         next(error);
