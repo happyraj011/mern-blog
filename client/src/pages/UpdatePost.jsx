@@ -18,20 +18,16 @@ export default function UpdatePost() {
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
-  const [formData, setFormData] = useState({
-    title: '',
-    category: 'uncategorized',
-    content: '',
-    image: '',
-  });
+  const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
   const { postId } = useParams();
+
   const navigate = useNavigate();
-  const { currentUser } = useSelector((state) => state.user);
+    const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
-    const fetchPost = async () => {
-      try {
+    try {
+      const fetchPost = async () => {
         const res = await fetch(`/api/post/getposts?postId=${postId}`);
         const data = await res.json();
         if (!res.ok) {
@@ -39,26 +35,19 @@ export default function UpdatePost() {
           setPublishError(data.message);
           return;
         }
-        if (res.ok && data.posts.length > 0) {
+        if (res.ok) {
           setPublishError(null);
-          const postData = data.posts[0];
-          setFormData({
-            title: postData.title,
-            category: postData.category || 'uncategorized',
-            content: postData.content ,
-            image: postData.image,
-          });
+          setFormData(data.posts[0]);
         }
-      } catch (error) {
-        console.log(error.message);
-        setPublishError('Something went wrong while fetching the post.');
-      }
-    };
+      };
 
-    fetchPost();
+      fetchPost();
+    } catch (error) {
+      console.log(error.message);
+    }
   }, [postId]);
 
-  const handleUploadImage = async () => {
+  const handleUpdloadImage = async () => {
     try {
       if (!file) {
         setImageUploadError('Please select an image');
@@ -94,7 +83,6 @@ export default function UpdatePost() {
       console.log(error);
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -119,7 +107,6 @@ export default function UpdatePost() {
       setPublishError('Something went wrong');
     }
   };
-
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
       <h1 className='text-center text-3xl my-7 font-semibold'>Update post</h1>
@@ -159,7 +146,7 @@ export default function UpdatePost() {
             gradientDuoTone='purpleToBlue'
             size='sm'
             outline
-            onClick={handleUploadImage}
+            onClick={handleUpdloadImage}
             disabled={imageUploadProgress}
           >
             {imageUploadProgress ? (
